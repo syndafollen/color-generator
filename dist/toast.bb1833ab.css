@@ -1,0 +1,2 @@
+.toastContainer{right:1.5rem;display:grid;justify-items:end;gap:1.5rem}.toast,.toastContainer{position:absolute;top:1rem}.toast{border-radius:10px;font-size:1.5rem;font-weight:700;line-height:1;padding:.5em 1em;background-color:#4682b4;animation:toastIt 2s cubic-bezier(.785,.135,.15,.86) forwards}@keyframes toastIt{0%,to{transform:translateY(-150%);opacity:0}10%,90%{transform:translateY(0);opacity:1}}
+/*# sourceMappingURL=/toast.bb1833ab.css.map */
