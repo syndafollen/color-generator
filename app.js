@@ -59,7 +59,9 @@ const setRandomColors = () => {
     const text = col.querySelector("h2");
     const button = col.querySelector("button");
 
-    const colColors = colors.filter(({ num }) => index === num)
+    const mappedColors = colors.map(({ num, color }) => ({ num, color: color[0] === '#' ? color.substring(2) : color.substring(1)}))
+    const colColors = mappedColors.filter(({ num }) => index === num)
+
     let color = '';
 
     if (!!colColors.length) {
@@ -88,13 +90,12 @@ const setTextColor = (text, color) => {
 
 
 const updateColorsHash = (colors = []) => {
-  const onlyColors = colors.map(elem => elem.color)
+  const onlyColors = colors.map(({ color }) => color) //  ['#1#EF73A1', '2#32A606', '3#25EF30', '4#D68AD2', '#32A606']
+  console.log('onlyColors:', onlyColors)
 
-  window.location.hash = onlyColors
-    .map((col) => {
-      return col.toString().substring(1);
-    })
-    .join(`-${index}#`); // ????
+  window.location.hash = colors
+    .map((item) => `${item.num}#${item.color.toString().substring(1)}`)
+    .join(`-`);
 
   locks.forEach((elem) => {
     const node = elem.children[0]
@@ -116,9 +117,7 @@ const getColorsFromHash = () => {
     
     window.location.hash = uniqueValues.join('-')
 
-    console.log('aaa:', uniqueValues.map((color, index) => ({ num: index, color}))) 
-
-    return uniqueValues.map((color, index) => ({ num: index, color})) // http://localhost:1234/#0#4FC800-1#A2A0D1-2#FFFFFF
+    return uniqueValues.map((color) => ({ num: color[0] === '#' ? Number(color[1]) : Number(color[0]), color } ))
   }
 
   return [];
@@ -131,7 +130,7 @@ const getColorsFromHash = () => {
   locks.forEach((elem)=>{
     const node = elem.children[0]
     const colorsArray  = colors.filter(({ color }) => color === elem.parentNode.firstElementChild.innerText) 
-  
+    
     if (!!colorsArray.length) {
         node.classList.add("fa-lock")
         node.classList.remove("fa-lock-open")
