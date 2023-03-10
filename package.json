@@ -1,27 +1,30 @@
 {
-    "name": "vanilla",
-    "version": "1.0.0",
-    "description": "JavaScript example starter project",
-    "main": "index.html",
-    "scripts": {
-        "start": "parcel index.html --open",
-        "build": "parcel build index.html"
-    },
-    "dependencies": {
-        "chroma-js": "^2.4.2",
-        "moment": "2.29.4",
-        "opn": "^6.0.0",
-        "parcel-bundler": "^1.6.1"
-    },
-    "devDependencies": {
-        "@babel/core": "7.2.0",
-        "typescript": "4.4.4"
-    },
-    "resolutions": {
-        "@babel/preset-env": "7.13.8"
-    },
-    "keywords": [
-        "javascript",
-        "starter"
-    ]
+  "name": "vanilla",
+  "version": "1.0.0",
+  "description": "JavaScript example starter project",
+  "main": "index.html",
+  "scripts": {
+    "start": "parcel index.html --open",
+    "build": "parcel build index.html",
+    "deploy": "npm run build && gh-pages -d dist"
+  },
+  "homepage": "https://nehorowo.github.io/colors-generator",
+  "dependencies": {
+    "chroma-js": "^2.4.2",
+    "moment": "2.29.4",
+    "opn": "^6.0.0",
+    "parcel-bundler": "^1.6.1"
+  },
+  "devDependencies": {
+    "@babel/core": "7.2.0",
+    "gh-pages": "^5.0.0",
+    "typescript": "4.4.4"
+  },
+  "resolutions": {
+    "@babel/preset-env": "7.13.8"
+  },
+  "keywords": [
+    "javascript",
+    "starter"
+  ]
 }
