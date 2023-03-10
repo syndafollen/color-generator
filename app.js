@@ -14,14 +14,16 @@ colorCodes.forEach((elem) => {
 });
 
 locks.forEach((elem, index) => {
-  elem.addEventListener("click", (event) => {  
-    const colorCode = event.currentTarget.parentNode.innerText
-    const colorsArray  = colors.filter(({ color }) => color === colorCode)
+  elem.addEventListener("click", (event) => {
+    const colorCode = event.currentTarget.previousElementSibling.innerText
 
-    if (colorsArray.length === 0) {
-      colors.push({ num: index, color: colorCode })
+    const mappedColors = colors.map(({ num, color }) => ({ num, color: color.length === 7 ? color : color[0] === '#' ? color.substring(2) : color.substring(1) }))
+    const colorsArray = mappedColors.filter(({ color }) => color === colorCode)
+
+    if (!!colorsArray.length) {
+      colors = mappedColors.filter(({ color }) => color !== colorCode)
     } else {
-      colors = colors.filter(({ color }) => color !== colorCode)
+      colors.push({ num: index, color: colorCode })
     }
 
     updateColorsHash(colors)
@@ -37,29 +39,26 @@ document.addEventListener("keydown", (event) => {
 });
 
 //kopírování kódu barvy
-const copyColorToClick = (text) => {
-  return navigator.clipboard.writeText(text);
-}
+const copyColorToClick = (text) => navigator.clipboard.writeText(text);
 
 const generateRandomColor = () => {
   const hexCode = "0123456789ABCDEF";
   let color = "";
+
   for (let i = 0; i < 6; i++) {
     color += hexCode[Math.floor(Math.random() * hexCode.length)];
   }
+
   return "#" + color;
 }
 
 //obnovení barev
 const setRandomColors = () => {
-  const isInitial = !!colors.length
-
   cols.forEach((col, index) => {
-    const isLocked = col.querySelector("i").classList.contains("fa-lock");
     const text = col.querySelector("h2");
     const button = col.querySelector("button");
 
-    const mappedColors = colors.map(({ num, color }) => ({ num, color: color[0] === '#' ? color.substring(2) : color.substring(1)}))
+    const mappedColors = colors.map(({ num, color }) => ({ num, color: color.length === 7 ? color : color[0] === '#' ? color.substring(2) : color.substring(1) }))
     const colColors = mappedColors.filter(({ num }) => index === num)
 
     let color = '';
@@ -68,11 +67,6 @@ const setRandomColors = () => {
       color = colColors[0].color
     } else {
       color = generateRandomColor();
-    }
-
-    if (isLocked) {
-      colors.push(text.textContent);
-      return;
     }
 
     text.textContent = color;
@@ -90,8 +84,7 @@ const setTextColor = (text, color) => {
 
 
 const updateColorsHash = (colors = []) => {
-  const onlyColors = colors.map(({ color }) => color) //  ['#1#EF73A1', '2#32A606', '3#25EF30', '4#D68AD2', '#32A606']
-  console.log('onlyColors:', onlyColors)
+  const onlyColors = colors.map(({ color }) => color)
 
   window.location.hash = colors
     .map((item) => `${item.num}#${item.color.toString().substring(1)}`)
@@ -99,25 +92,25 @@ const updateColorsHash = (colors = []) => {
 
   locks.forEach((elem) => {
     const node = elem.children[0]
-  
-    if (onlyColors.includes(elem.parentNode.firstElementChild.innerText)) {
-        node.classList.add("fa-lock")
-        node.classList.remove("fa-lock-open")
+
+    if (onlyColors.includes(elem.previousElementSibling.innerText)) {
+      node.classList.add("fa-lock")
+      node.classList.remove("fa-lock-open")
     } else {
       node.classList.add("fa-lock-open")
-        node.classList.remove("fa-lock")
+      node.classList.remove("fa-lock")
     }
   })
-  
+
 }
 
 const getColorsFromHash = () => {
   if (window.location.hash.length > 1) {
     const uniqueValues = [...new Set(window.location.hash.split('-'))]
-    
+
     window.location.hash = uniqueValues.join('-')
 
-    return uniqueValues.map((color) => ({ num: color[0] === '#' ? Number(color[1]) : Number(color[0]), color } ))
+    return uniqueValues.map((color) => ({ num: color[0] === '#' ? Number(color[1]) : Number(color[0]), color }))
   }
 
   return [];
@@ -127,13 +120,14 @@ const getColorsFromHash = () => {
   colors = getColorsFromHash()
   setRandomColors();
 
-  locks.forEach((elem)=>{
+  locks.forEach((elem) => {
     const node = elem.children[0]
-    const colorsArray  = colors.filter(({ color }) => color === elem.parentNode.firstElementChild.innerText) 
-    
+    const mappedColors = colors.map(({ num, color }) => ({ num, color: color.length === 7 ? color : color[0] === '#' ? color.substring(2) : color.substring(1) }))
+    const colorsArray = mappedColors.filter(({ color }) => color === elem.parentNode.firstElementChild.innerText)
+
     if (!!colorsArray.length) {
-        node.classList.add("fa-lock")
-        node.classList.remove("fa-lock-open")
+      node.classList.add("fa-lock")
+      node.classList.remove("fa-lock-open")
     } else {
       node.classList.add("fa-lock-open")
       node.classList.remove("fa-lock")
